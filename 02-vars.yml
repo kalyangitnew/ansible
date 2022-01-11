@@ -100,3 +100,28 @@
 ## Booleans while quoted considers as string,
 ## Number quoted are not consider as string, those are still consider as numbers.
 #
+
+
+
+- name: run time variables
+  hosts: all
+  tasks:
+    - name: Get uptime command output
+      ansible.builtin.shell: uptime
+      register: OUT
+    - name: Print OUT
+      ansible.builtin.debug:
+        msg: "{{OUT.stdout}}"
+    - name: Set fact
+      ansible.builtin.set_fact:
+        UPTIME_OUTPUT: "{{OUT.stdout}}"
+
+
+
+
+
+
+
+
+
+
