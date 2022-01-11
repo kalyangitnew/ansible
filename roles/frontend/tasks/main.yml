@@ -1,3 +1,3 @@
-- name: Print Frontend
+- name: Print frontend
   debug:
-    msg: Frontend
+    msg: frontend
