@@ -99,4 +99,3 @@
 ## {{URL} Hello , then yes it need to be quoted since it is starting with a variable
 ## Booleans while quoted considers as string,
 ## Number quoted are not consider as string, those are still consider as numbers.
-#
