@@ -49,7 +49,8 @@
     - name: Access CLI Inventory
       ansible.builtin.debug:
         msg: URL = {{URL}}
-
+# we should give variable in cli
+# demo for precedence checking
 - name: Demo for precedence
   hosts: all
   vars:
@@ -72,7 +73,7 @@
       ansible.builtin.debug:
         msg: "HOST OS = {{ansible_distribution}}"
 ## General good practice we dont start our user variable with ansible_ , because those are for System facts from ansible.
-
+## ansible predefined variables called facts. means these are seen while playing playbook..
 - name: run time variables
   hosts: all
   tasks:
@@ -86,6 +87,9 @@
     - name: Set fact
       ansible.builtin.set_fact:
         UPTIME_OUTPUT: "{{OUT.stdout}}"
+
+# search in internet --- run a shell command in ansible module
+# above is example to search for internet
 
 
 ## Variable values need not to be quoted while declaring
