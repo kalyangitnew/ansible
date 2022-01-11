@@ -1,0 +1,97 @@
+- name: Play level variables
+  hosts: all
+  vars:
+    URL: play.example.com
+  tasks:
+    - name: Access URL in Task1
+      ansible.builtin.debug:
+        msg: URL in Task1 = {{URL}}
+    - name: Access URL in Task2
+      ansible.builtin.debug:
+        msg: URL in Task2 = {{URL}}
+### Declare variable in play level then all the tasks can access that variable
+
+
+- name: Demo on File Variables
+  hosts: all
+  vars_files:
+    - sample-vars.yml
+  tasks:
+    - name: Access URL
+      ansible.builtin.debug:
+        msg: URL = {{URL}}
+
+- name: Demo on Task Variables
+  hosts: all
+  tasks:
+    - name: Access URL from Task var
+      ansible.builtin.debug:
+        msg: URL = {{URL}}
+      vars:
+        URL: task.google.com
+    - name: Access URL from previous task
+      ansible.builtin.debug:
+        msg: URL = {{URL}}
+#
+### You can declare variable on tasks, However the scope is only that task.
+#
+- name: Demo on Inventory Variables
+  hosts: all
+  tasks:
+    - name: Access URL Inventory
+      ansible.builtin.debug:
+        msg: URL = {{URL}}
+# above in play we should save url in inventory file
+
+- name: Demo on CLI variables
+  hosts: all
+  tasks:
+    - name: Access CLI Inventory
+      ansible.builtin.debug:
+        msg: URL = {{URL}}
+
+- name: Demo for precedence
+  hosts: all
+  vars:
+    URL1: play.example.com
+  vars_files:
+    - sample-vars.yml
+  tasks:
+    - name: Print URL1
+      ansible.builtin.debug:
+        msg: URL1 = {{URL1}}
+      vars:
+        URL1: task.example.com
+
+- name: Print facts
+  hosts: all
+  vars:
+    ansible_distribution: Sample
+  tasks:
+    - name: Print a fact
+      ansible.builtin.debug:
+        msg: "HOST OS = {{ansible_distribution}}"
+## General good practice we dont start our user variable with ansible_ , because those are for System facts from ansible.
+
+- name: run time variables
+  hosts: all
+  tasks:
+    - name: Get uptime command output
+      ansible.builtin.shell: uptime
+      register: OUT
+      ## OUT Is a variable
+    - name: Print OUT
+      ansible.builtin.debug:
+        msg: "{{OUT.stdout}}"
+    - name: Set fact
+      ansible.builtin.set_fact:
+        UPTIME_OUTPUT: "{{OUT.stdout}}"
+
+
+## Variable values need not to be quoted while declaring
+## Variable while accessing also need not to be quoted, Unless if the value is starting with variable.
+## Meaning
+## Hello {{URL}} need not to be quoted becuase this is not starting with variable
+## {{URL} Hello , then yes it need to be quoted since it is starting with a variable
+## Booleans while quoted considers as string,
+## Number quoted are not consider as string, those are still consider as numbers.
