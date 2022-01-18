@@ -2,5 +2,8 @@
   hosts: frontend
   roles:
     - frontend
-
+- name: Setup MongoDB
+  hosts: mongodb
+  roles:
+    - mongodb
 
