@@ -1,0 +1,6 @@
+COMPONENT: frontend
+APP_TYPE: frontend
+LOG_TYPE: json
+MULTILINE_TYPE: none
+INCLUDE_LINES: none
+LOG_FILE: "/var/log/nginx/access.log"
