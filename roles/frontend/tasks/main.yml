@@ -1,3 +1,46 @@
-- name: Print frontend
-  debug:
-    msg: frontend
+- name: Install Nginx
+  yum:
+    name: nginx
+    state: latest
+
+- name: Download code
+  include_role:
+    name: common
+    tasks_from: download
+  vars:
+    APP_LOCATION: /usr/share/nginx/html/
+
+- name: Copy the Htdocs content
+  ansible.builtin.copy:
+    src: /tmp/frontend-main/static/
+    dest: /usr/share/nginx/html/
+    remote_src: yes
+  when: APP_VERSION == ""
+
+- name: Copy RoboShop Config file
+  ansible.builtin.template:
+    src: roboshop.conf
+    dest: /etc/nginx/default.d/roboshop.conf
+
+- name: Copy Nginx Config file
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+
+- name: Start Nginx Service
+  ansible.builtin.systemd:
+    state: restarted
+    name: nginx
+    enabled: yes
+  when: AMI is not defined
+
+- name: Enable Nginx Service
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: yes
+  when: AMI is defined
+
+- name: Setup Node Exporter
+  ansible.builtin.include_role:
+    name: node-exporter
+
