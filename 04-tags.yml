@@ -1,0 +1,19 @@
+- name: Demo on tags
+  hosts: localhost
+  tasks:
+    - name: Fruits
+      debug:
+        msg: Fruits
+      tags:
+        - fruits
+        - fruit
+
+    - name: Groceries
+      tags:
+        - groceries
+        - cerals
+      debug:
+        msg: groceries
+
+
+# Tags can be applied on plays in playbook
