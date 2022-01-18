@@ -9,7 +9,7 @@
     - name: Access URL in Task2
       ansible.builtin.debug:
         msg: URL in Task2 = {{URL}}
-### Declare variable in play level then all the tasks can access that variable
+### Declare variable in play level then all the task can access that variable
 
 
 - name: Demo on File Variables
@@ -33,7 +33,7 @@
       ansible.builtin.debug:
         msg: URL = {{URL}}
 #
-### You can declare variable on tasks, However the scope is only that task.
+### You can declare variable on task, However the scope is only that task.
 #
 - name: Demo on Inventory Variables
   hosts: all
