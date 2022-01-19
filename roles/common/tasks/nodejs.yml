@@ -1,0 +1,26 @@
+- name: Install NodeJS
+  ansible.builtin.yum:
+    name: [ "nodejs", "make", "gcc-c++" ]
+    state: present
+
+- name: Download Code
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: download
+  vars:
+    APP_LOCATION: "/home/roboshop/{{COMPONENT}}"
+    APP_USER: roboshop
+
+- name: Install Nodejs dependencies
+  community.general.npm:
+    path: /home/roboshop/{{COMPONENT}}
+  become_user: roboshop
+
+- name: Download SystemD
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: systemd
+
+- name: Setup Node Exporter
+  ansible.builtin.include_role:
+    name: node-exporter
