@@ -1,9 +1,16 @@
 - name: Setup Frontend
   hosts: frontend
+  become: true
   roles:
     - frontend
 - name: Setup MongoDB
   hosts: mongodb
+  become: true
   roles:
     - mongodb
+- name: Setup Catalogue
+  hosts: catalogue
+  become: true
+  roles:
+    - catalogue
 
