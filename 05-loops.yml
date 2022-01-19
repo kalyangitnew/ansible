@@ -1,0 +1,11 @@
+- name: demo on loops
+  hosts: localhost
+  tasks:
+    - name: printing fruits using loop
+      debug: "fruits names are = {{item}}"
+      loop
+      - apple
+      - banana
+      - grape
+
+# item is the variable given by ansible to use loop
