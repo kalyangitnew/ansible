@@ -9,3 +9,14 @@
       loop: "{{FRUITS}}"
 
 # item is the variable given by ansible to use loop
+- name: Demo on map values of loop
+  hosts: localhost
+  tasks:
+    - name: Print
+      debug:
+        msg: "Course Name = {{item.name}}, Timing = {{item.timing}}"
+      loop:
+        - name: DevOps
+          timing: 6am
+        - name: AWS
+          timing: 8am
