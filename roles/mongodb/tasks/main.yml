@@ -16,3 +16,15 @@
     name: mongod
     state: restarted
     enabled: yes
+- name: Download Schema
+  include_role:
+    name: common
+    tasks_from: download
+
+- name: Load Schema
+  community.mongodb.mongodb_shell:
+    file: /tmp/mongodb-main/{{item}}.js
+    idempotent: yes
+  loop:
+    - catalogue
+    - users
