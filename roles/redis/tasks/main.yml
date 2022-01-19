@@ -1,0 +1,21 @@
+- name: Install redis repos
+  yum:
+    name: http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    state: present
+
+- name: Install redis
+  yum:
+    name: redis
+    enablerepo: remi
+
+- name: Update Redis Listen address
+  replace:
+    path: /etc/redis.conf
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0'
+
+- name: Start redis
+  systemd:
+    name: redis
+    state: restarted
+    enabled: yes
