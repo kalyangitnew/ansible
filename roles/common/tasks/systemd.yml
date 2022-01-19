@@ -1,0 +1,19 @@
+- name: Update systemd file
+  template:
+    src: systemd.service
+    dest: /etc/systemd/system/{{COMPONENT}}.service
+
+- name: Start {{COMPONENT}} Service
+  systemd:
+    name: "{{COMPONENT}}"
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  when: AMI is not defined
+
+- name: Enable {{COMPONENT}} Service
+  systemd:
+    name: "{{COMPONENT}}"
+    enabled: yes
+    daemon_reload: yes
+  when: AMI is defined
