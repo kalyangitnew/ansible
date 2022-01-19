@@ -1,0 +1,56 @@
+- name: Setup MySQL repo
+  ansible.builtin.copy:
+    src: mysql.repo
+    dest: /etc/yum.repos.d/mysql.repo
+
+- name: Remove a mariabd package
+  ansible.builtin.yum:
+    name: mariadb-libs
+    state: absent
+
+- name: Install MySQL
+  ansible.builtin.yum:
+    name:
+      - mysql-community-server
+      - MySQL-python
+      - python36-PyMySQL
+    state: present
+
+- name: Start MySQL service
+  ansible.builtin.systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: Grab default password
+  ansible.builtin.shell: grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'
+  register: DEFAULT_PASSWORD
+
+- name: Check the new password is working
+  ansible.builtin.shell: echo 'show databases;' | mysql -uroot -p"{{NEW_PASSWORD}}"
+  register: check_new_password
+  ignore_errors: yes
+
+- name: Copy Password reset sql file
+  ansible.builtin.template:
+    src: pass.sql
+    dest: /tmp/pass.sql
+  when: check_new_password.failed
+
+- name: Reset Password
+  ansible.builtin.shell: mysql --connect-expired-password -uroot -p"{{DEFAULT_PASSWORD.stdout}}" </tmp/pass.sql
+  when: check_new_password.failed
+
+- name: Download Schema
+  include_role:
+    name: common
+    tasks_from: download
+
+- name: Load Schema
+  community.mysql.mysql_db:
+    state: import
+    name: all
+    target: /tmp/mysql-main/shipping.sql
+    login_user: root
+    login_password: "{{NEW_PASSWORD}}"
+
