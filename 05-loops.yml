@@ -1,7 +1,7 @@
 - name: Demo on loops
   hosts: localhost
   vars:
-    FRUITS: [ "apple", "banana", "orange" ]
+    FRUITS: [ "apple", "frfbanana", "orange" ]
   tasks:
     - name: Print All fruits
       debug:
