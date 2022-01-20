@@ -1,0 +1,21 @@
+- name: Conditions
+  hosts: localhost
+  vars:
+    URL: google.com
+    COUNT: 2
+    CASE: false
+  tasks:
+    - name: Condition on String
+      debug:
+        msg: "{{URL}}"
+      when: URL == "google.co.in" or URL == "google.com"
+
+    - name: Condition on Numbers
+      debug:
+        msg: "{{COUNT}}"
+      when: COUNT >= 2
+
+    - name: Boolean
+      debug:
+        msg: "Hey"
+      when: CASE
