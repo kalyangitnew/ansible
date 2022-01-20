@@ -1,0 +1,6 @@
+COMPONENT: shipping
+APP_TYPE: backend
+LOG_TYPE: raw
+MULTILINE_TYPE: java
+INCLUDE_LINES: none
+LOG_FILE: "/var/log/{{COMPONENT}}.log"
