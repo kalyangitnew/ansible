@@ -1,0 +1,35 @@
+- name: Install Maven
+  yum:
+    name: maven
+    state: present
+
+- name: Download Code
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: download
+  vars:
+    APP_LOCATION: "/home/roboshop/{{COMPONENT}}"
+    APP_USER: roboshop
+
+- name: Make maven package
+  ansible.builtin.shell:
+    cmd: mvn clean package && mv target/shipping-1.0.jar shipping.jar
+    chdir: "/home/roboshop/{{COMPONENT}}"
+  become_user: roboshop
+  when: APP_VERSION == ""
+
+- name: Download SystemD
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: systemd
+
+- name: Wait for restart is complete
+  wait_for:
+    port: 8080
+    delay: 30
+    timeout: 180
+  when: AMI is not defined
+
+- name: Setup Node Exporter
+  ansible.builtin.include_role:
+    name: node-exporter
