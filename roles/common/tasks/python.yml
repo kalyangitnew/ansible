@@ -1,0 +1,41 @@
+- name: Install Python
+  yum:
+    name:
+      - python36
+      - gcc
+      - python3-devel
+    state: present
+
+- name: Download Code
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: download
+  vars:
+    APP_LOCATION: "/home/roboshop/{{COMPONENT}}"
+    APP_USER: roboshop
+
+- name: Install Python Dependencies
+  pip:
+    requirements: "/home/roboshop/{{COMPONENT}}/requirements.txt"
+    executable: pip3
+
+- name: Change UID in INI File
+  ansible.builtin.lineinfile:
+    path: "/home/roboshop/{{COMPONENT}}/{{COMPONENT}}.ini"
+    regexp: '^uid'
+    line: uid = {{app_user_info.uid}}
+
+- name: Change GID in INI File
+  ansible.builtin.lineinfile:
+    path: "/home/roboshop/{{COMPONENT}}/{{COMPONENT}}.ini"
+    regexp: '^gid'
+    line: uid = {{app_user_info.group}}
+
+- name: Download SystemD
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: systemd
+
+- name: Setup Node Exporter
+  ansible.builtin.include_role:
+    name: node-exporter

@@ -1,0 +1,20 @@
+- name: Set Hostname
+  shell: set-hostname -skip-apply {{COMPONENT}}
+
+- name: Copy rsyslog conf
+  template:
+    src: rsyslog.conf
+    dest: /etc/rsyslog.d/01-roboshop.conf
+  when: APP_TYPE == "backend"
+
+- name: Restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
+  when: APP_TYPE == "backend"
+
+- name: Import Filebeat
+  ansible.builtin.include_role:
+    name: elk
+    tasks_from: filebeat
+  when: APP_TYPE == "backend" or APP_TYPE == "frontend"
